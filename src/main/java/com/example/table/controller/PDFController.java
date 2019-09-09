@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @ClassName PDFController
  * @Description
@@ -43,6 +45,11 @@ public class PDFController {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         return new ResponseEntity<String>("{ \"code\" : \"404\", \"message\" : \"not found\" }",
                 headers, HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping("/preview")
+    public void preview(HttpServletResponse response){
+        pdfService.preview(response);
     }
 
 }

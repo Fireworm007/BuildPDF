@@ -41,6 +41,11 @@ public class FreeMarkerTestController {
 //        return modelAndView;
 //    }
 
+    /**
+     * 通过浏览器访问FreeMarker生成的html
+     * @param model
+     * @return
+     */
     @RequestMapping()
     public String welcome(Map<String, Object> model) {
 
@@ -48,7 +53,7 @@ public class FreeMarkerTestController {
         PDFDates.add(new PDFDate("test1", "source1", "period1"));
         PDFDates.add(new PDFDate("test2", "source2", "period2"));
         PDFDates.add(new PDFDate("test3", "source3", "period3"));
-        PDFDates.add(new PDFDate("test4", "source4", "period4"));
+        PDFDates.add(new PDFDate("test4", "source4", "中文测试"));
 
         model.put("pdfList", PDFDates);
         return "freeMarkerTest";

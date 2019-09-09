@@ -2,6 +2,8 @@ package com.example.table.service;
 
 import com.example.table.model.PDFDate;
 import com.example.table.util.PDFUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +29,7 @@ import java.util.Map;
 @Service
 public class PDFServiceImpl implements PDFService {
 
+    private final Logger Logger = LoggerFactory.getLogger(PDFServiceImpl.class);
 //    @Autowired
 //    private PDFExportConfig pdfExportConfig;
 
@@ -42,6 +47,21 @@ public class PDFServiceImpl implements PDFService {
      *
      * @return
      */
+
+    private byte[] generateDate(){
+        Map<String, Object> dataMap = new HashMap<>(16);
+        ArrayList<PDFDate> PDFDates = new ArrayList<>();
+
+        PDFDates.add(new PDFDate("test1", "source1", "period1"));
+        PDFDates.add(new PDFDate("test2", "source2", "period2"));
+        PDFDates.add(new PDFDate("test3", "source3", "period3"));
+        PDFDates.add(new PDFDate("test4", "source4", "中文测试"));
+
+        dataMap.put("pdfList",PDFDates);
+
+        String htmlStr = PDFUtil.freemarkerRender(dataMap, testFtl);
+        return PDFUtil.createPDF(htmlStr, fontSimsun);
+    }
     @Override
     public ResponseEntity<?> export() {
         HttpHeaders headers = new HttpHeaders();
@@ -49,18 +69,7 @@ public class PDFServiceImpl implements PDFService {
         /**
          * 数据导出(PDF 格式)
          */
-        Map<String, Object> dataMap = new HashMap<>(16);
-        ArrayList<PDFDate> PDFDates = new ArrayList<>();
-
-        PDFDates.add(new PDFDate("test1", "source1", "period1"));
-        PDFDates.add(new PDFDate("test2", "source2", "period2"));
-        PDFDates.add(new PDFDate("test3", "source3", "period3"));
-        PDFDates.add(new PDFDate("test4", "source4", "period4"));
-
-        dataMap.put("pdfList",PDFDates);
-
-        String htmlStr = PDFUtil.freemarkerRender(dataMap, testFtl);
-        byte[] pdfBytes = PDFUtil.createPDF(htmlStr, fontSimsun);
+        byte[] pdfBytes = generateDate();
         if (pdfBytes != null && pdfBytes.length > 0) {
             String fileName = System.currentTimeMillis() + (int) (Math.random() * 90000 + 10000) + ".pdf";
             headers.setContentDispositionFormData("attachment", fileName);
@@ -71,5 +80,16 @@ public class PDFServiceImpl implements PDFService {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         return new ResponseEntity<String>("{ \"code\" : \"404\", \"message\" : \"not found\" }",
                 headers, HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public void preview(HttpServletResponse response){
+        try (ServletOutputStream out = response.getOutputStream()) {
+            byte[] pdfBytes = generateDate();
+            out.write(pdfBytes);
+            out.flush();
+        } catch (Exception e) {
+            Logger.error(e.getMessage(), e);
+        }
     }
 }

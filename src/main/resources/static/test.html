@@ -3,13 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        table,td,th,tr{
+            border: 1px solid black;
+        }
+        table{
+            border-collapse: collapse;
+            width: 737px;
+        }
+        td {
+            height: 52px;
+        }
+        th{
+            background-color:#1d625c;
+            height: 52px;
+        }
+        .item_title{
+            width: 557px;
+        }
+        .source_info{
+            width: 60px;
+        }
+        .period{
+            width:120px;
+        }
+    </style>
 </head>
 <body>
 <p>这是一个test</p>
 
-<table border="1">
+<table>
+    <tr>
+        <th class="item_title">Firstname</th>
+        <th class="source_info">Lastname</th>
+        <th class="period">Savings</th>
+    </tr>
     <tr>
         <td>Row 1, cell 1</td>
+        <td>Row 1, cell 2</td>
         <td>Row 1, cell 2</td>
     </tr>
 </table>
