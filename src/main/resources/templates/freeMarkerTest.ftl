@@ -4,8 +4,11 @@
     <title>freeMarkerTest</title>
     <style>
         @page {
-            size: 210mm 290mm;
+            size: A4;
             /*padding: 16px 25px 0px 28px;*/
+        }
+        body{
+            font-family: "Microsoft YaHei";
         }
         table,td,th,tr{
             border: 1px solid black;
@@ -47,9 +50,9 @@
 <#list  pdfList  as  item>
     <table cellspacing="0">
         <tr>
-            <th class="item_title">Firstname</th>
-            <th class="source_info">Lastname</th>
-            <th class="period">Savings</th>
+            <th class="item_title">First&nbsp;&nbsp;name<mark>mark</mark></th>
+            <th class="source_info">Lastname&nbsp;</th>
+            <th class="period">Savings&nbsp;&nbsp;&nbsp;&nbsp;</th>
         </tr>
         <tr>
             <td>${item.title}<br/></td>

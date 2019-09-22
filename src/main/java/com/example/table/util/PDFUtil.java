@@ -1,5 +1,11 @@
 package com.example.table.util;
 
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
 import com.itextpdf.text.pdf.BaseFont;
 import com.lowagie.text.DocumentException;
 import freemarker.template.Configuration;
@@ -23,7 +29,7 @@ public class PDFUtil {
     private PDFUtil(){}
 
     private volatile static Configuration configuration;
-
+    public static final String FONT = "classpath:static/font/NotoSansCJKsc-Regular.otf";
     static {
         if (configuration == null) {
             synchronized (PDFUtil.class) {
@@ -74,27 +80,53 @@ public class PDFUtil {
      * @param htmlTmpStr html 模板文件字符串
      * @param fontFile 所需字体文件(相对路径+文件名)
      * */
-    public static byte[] createPDF(String htmlTmpStr, String fontFile) {
+//    public static byte[] createPDF(String htmlTmpStr, String fontFile) {
+//        ByteArrayOutputStream outputStream = null;
+//        byte[] result = null;
+//        try {
+//            outputStream = new ByteArrayOutputStream();
+//            ITextRenderer renderer = new ITextRenderer();
+//            renderer.setDocumentFromString(htmlTmpStr);
+//            ITextFontResolver fontResolver = renderer.getFontResolver();
+//            // 解决中文支持问题,需要所需字体(ttc)文件
+//            fontResolver.addFont(ResourceFileUtil.getAbsolutePath(fontFile), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+//            renderer.layout();
+//            renderer.createPDF(outputStream);
+//            result=outputStream.toByteArray();
+//            if(outputStream != null) {
+//                outputStream.flush();
+//                outputStream.close();
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (DocumentException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
+
+    /**
+     * 使用IText7进行html5ToPdf
+     * @param html
+     * @param fontPath
+     * @return
+     */
+
+    public static byte[] createPDF(String html, String fontPath){
         ByteArrayOutputStream outputStream = null;
         byte[] result = null;
         try {
             outputStream = new ByteArrayOutputStream();
-            ITextRenderer renderer = new ITextRenderer();
-            renderer.setDocumentFromString(htmlTmpStr);
-            ITextFontResolver fontResolver = renderer.getFontResolver();
-            // 解决中文支持问题,需要所需字体(ttc)文件
-            fontResolver.addFont(ResourceFileUtil.getAbsolutePath(fontFile), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            renderer.layout();
-            renderer.createPDF(outputStream);
+            ConverterProperties props = new ConverterProperties();
+            DefaultFontProvider defaultFontProvider = new DefaultFontProvider(false, false, false);
+            defaultFontProvider.addFont(fontPath);
+            props.setFontProvider(defaultFontProvider);
+            HtmlConverter.convertToPdf(html, outputStream, props);
             result=outputStream.toByteArray();
-            if(outputStream != null) {
-                outputStream.flush();
-                outputStream.close();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (DocumentException e) {
-            e.printStackTrace();
+            outputStream.flush();
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
