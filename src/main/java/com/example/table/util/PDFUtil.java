@@ -3,6 +3,8 @@ package com.example.table.util;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -122,6 +124,7 @@ public class PDFUtil {
             ConverterProperties props = new ConverterProperties();
             DefaultFontProvider defaultFontProvider = new DefaultFontProvider(false, false, false);
             defaultFontProvider.addFont(fontPath);
+            PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
             props.setFontProvider(defaultFontProvider);
             HtmlConverter.convertToPdf(html, outputStream, props);
             result=outputStream.toByteArray();
