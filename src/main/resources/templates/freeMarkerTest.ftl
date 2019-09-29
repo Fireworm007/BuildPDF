@@ -9,7 +9,6 @@
         }
         body{
             font-family: "Microsoft YaHei";
-            display: inline-block;
         }
         table,td,th,tr{
             border: 1px solid black;
@@ -43,16 +42,15 @@
             width: 739px;
             height: 19px;
         }
-
     </style>
 </head>
 <body>
 
 <div>
 <#list  pdfList  as  item>
-    <table class=table_title cellspacing="0">
+    <table cellspacing="0">
         <tr>
-            <th class="item_title" style="display: inline-block">1First&nbsp;&nbsp;name<mark>mark</mark></th>
+            <th class="item_title">First&nbsp;&nbsp;name<mark>mark</mark></th>
             <th class="source_info">Lastname&nbsp;</th>
             <th class="period">Savings&nbsp;&nbsp;&nbsp;&nbsp;</th>
         </tr>
@@ -62,10 +60,8 @@
             <td>${item.period}<br/></td>
         </tr>
     </table>
-
     <div class="spacing_bar"></div>
 </#list>
-    <img height="400" width="550" src="classpath:static/test.jpg">
 </div>
 </body>
 </html>
